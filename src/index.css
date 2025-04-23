@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100;9..40,200;9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800;9..40,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Raleway", DM Sans;
+  line-height: 1.5;
+  font-weight: 400;
+  max-width: 1519.2px;
+  margin: 0 auto;
+  background-color: #201d1d;
+  color: #ffffff;
+
+  /* color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: red; /* Change this to your desired color */
+  transition: color 0.3s ease;
+}
+
+/* Optional: Hover Effect */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: #ff6347; /* Change color on hover (e.g., tomato) */
+}
+/* Hide scrollbars */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* Scrollbar Styles */
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
+
+/* Chrome, Safari */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 6px;
+}
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
