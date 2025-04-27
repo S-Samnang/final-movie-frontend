@@ -6,15 +6,15 @@ import SkeletonBanner from "../../component/SkeletonBanner";
 import { request } from "../../util/request";
 
 const HomePage = () => {
-  const [topRatedMovie, setTopRatedMovie] = useState([]);
+  const [popularMovie, setPopularMovie] = useState([]);
   const [nowPlayMovie, setNowPlayMovie] = useState([]);
   const [upcomingMovie, setUpcomingMovie] = useState([]);
 
   useEffect(() => {
-    const fetchTopRatedMovie = async () => {
+    const fetchPopularMovie = async () => {
       try {
-        const response = await request("movies?type=top_rated", "get");
-        setTopRatedMovie(response.movies?.data || []);
+        const response = await request("movies?type=popular", "get");
+        setPopularMovie(response.movies?.data || []);
       } catch (err) {
         console.error("Error fetching top rated movies:", err);
       }
@@ -38,7 +38,7 @@ const HomePage = () => {
       }
     };
 
-    fetchTopRatedMovie();
+    fetchPopularMovie();
     fetchNowPlayMovie();
     fetchUpcomingMovie();
   }, []);
@@ -55,23 +55,23 @@ const HomePage = () => {
     <main className="w-full">
       {/* Banner */}
       <section className="pt-6 sm:pt-8 pb-6 sm:pb-8">
-        {topRatedMovie.length === 0 ? (
+        {popularMovie.length === 0 ? (
           <SkeletonBanner />
         ) : (
-          <SwiperBanner images={topRatedMovie} />
+          <SwiperBanner images={popularMovie} />
         )}
       </section>
 
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-10">
-        {/* Top Rated */}
+        {/* Popular */}
         <section id="top-rated" className="Top-Rating-Movie">
           <h2 className="mb-6 mt-6 text-xl sm:text-2xl lg:text-3xl font-semibold">
-            Top Rated Movies
+            Popular Movies
           </h2>
-          {topRatedMovie.length === 0 ? (
+          {popularMovie.length === 0 ? (
             renderSkeletons()
           ) : (
-            <SwiperMovieCard movies={topRatedMovie} />
+            <SwiperMovieCard movies={popularMovie} />
           )}
         </section>
 

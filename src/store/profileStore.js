@@ -5,16 +5,23 @@ export const profileStore = create((set) => ({
   token: localStorage.getItem("token") || null,
 
   funLogin: (user, token) => {
+    const formattedUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      roles: user.roles,
+      profileImage: user.profile_image || "", // ✅ ADD this!
+    };
+
     // Save to localStorage
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(formattedUser));
     localStorage.setItem("token", token);
 
     // Save to Zustand state
-    set({ user, token });
+    set({ user: formattedUser, token });
 
-    //  Debug logs
-    console.log(" User logged in:", user);
-    console.log(" Roles:", user.roles);
+    console.log("User logged in:", formattedUser);
+    console.log("Roles:", formattedUser.roles);
   },
 
   funClear: () => {
@@ -22,15 +29,14 @@ export const profileStore = create((set) => ({
     localStorage.removeItem("token");
     set({ user: null, token: null });
 
-    console.log(" Logged out & cleared store");
+    console.log("Logged out & cleared store");
   },
 
-  //  Optional: sync from localStorage manually (in App.jsx)
   syncUserFromStorage: () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
     set({ user, token });
 
-    console.log(" Synced from localStorage:", { user, token });
+    console.log("Synced from localStorage:", { user, token });
   },
 }));

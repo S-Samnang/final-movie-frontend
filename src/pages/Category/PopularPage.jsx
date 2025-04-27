@@ -3,7 +3,7 @@ import { request } from "../../util/request";
 import MovieCard from "../../component/MovieCard";
 import SkeletonCard from "../../component/SkeletonCard";
 
-const TopRatedPage = () => {
+const PopularPage = () => {
   const [movies, setMovies] = useState([]);
   const [allMovies, setAllMovies] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -16,7 +16,7 @@ const TopRatedPage = () => {
 
   const fetchMovies = (page = 1) => {
     setLoading(true);
-    request(`movies?type=top_rated&page=${page}`, "get")
+    request(`movies?type=popular&page=${page}`, "get")
       .then((res) => {
         const data = res.movies?.data || [];
         setAllMovies(data);
@@ -76,7 +76,7 @@ const TopRatedPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
-        Top Rated Movies
+        Popular Movies
       </h2>
 
       {/* Genre Filter */}
@@ -134,4 +134,4 @@ const TopRatedPage = () => {
   );
 };
 
-export default TopRatedPage;
+export default PopularPage;

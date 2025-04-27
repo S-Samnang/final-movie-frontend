@@ -35,7 +35,14 @@ const MovieDetail = () => {
       setMessage(res.message);
     } catch (error) {
       console.error("Favorite error:", error);
-      setMessage("Something went wrong.");
+      if (
+        error?.error === "Unauthorized" ||
+        error?.error === "Unauthenticated."
+      ) {
+        setMessage("Session expired. Please log in again.");
+      } else {
+        setMessage(error?.error || "Failed to save favorite.");
+      }
     }
 
     setTimeout(() => setMessage(""), 2000);

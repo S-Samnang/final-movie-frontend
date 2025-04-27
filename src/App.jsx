@@ -14,7 +14,7 @@ import NowPlayingPage from "./pages/Category/NowPlayingPage";
 import Navbar from "./component/Navbar";
 import Footer from "./component/Footer";
 import PrivateRoute from "./component/PrivateRoute";
-import TopRatedPage from "./pages/Category/TopRatedPage";
+import PopularPage from "./pages/Category/PopularPage";
 import MovieDetail from "./pages/Detail/MovieDetail";
 import SearchPage from "./pages/Category/SerachPage";
 import SocialLoginRedirect from "./component/SocialLoginRedirect";
@@ -31,7 +31,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/upcoming" element={<UpcomingPage />} />
             {/* <Route path="/moviedetail" element={<MovieDetail />} /> */}
-            <Route path="/toprated" element={<TopRatedPage />} />
+            <Route path="/popular" element={<PopularPage />} />
             <Route path="/nowplaying" element={<NowPlayingPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/movie/:id" element={<MovieDetail />} />

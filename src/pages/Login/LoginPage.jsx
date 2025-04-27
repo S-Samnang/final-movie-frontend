@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { profileStore } from "../../store/profileStore";
 import { request } from "../../util/request";
+import ErrorMessage from "../../component/ErrorMessage";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -9,8 +10,9 @@ const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +22,12 @@ const LoginPage = () => {
       const res = await request("auth/login", "post", form);
       funLogin(res.user, res.token);
       navigate("/");
-    } catch {
-      setError("Invalid email or password.");
+    } catch (err) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Login failed. Please check your credentials.";
+      setError(errorMessage);
     }
   };
 
@@ -81,7 +87,7 @@ const LoginPage = () => {
             className="w-full px-4 py-2 rounded bg-[#2c2c2e] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
           />
 
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+          {error && <ErrorMessage message={error} />}
 
           <button
             type="submit"

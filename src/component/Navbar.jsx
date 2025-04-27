@@ -102,9 +102,9 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            to="/toprated"
-            className={active === "/toprated" ? "text-red-500" : ""}
-            onClick={() => handleMenuClick("/toprated")}
+            to="/popular"
+            className={active === "/popular" ? "text-red-500" : ""}
+            onClick={() => handleMenuClick("/popular")}
           >
             Popular
           </Link>
@@ -164,10 +164,11 @@ const Navbar = () => {
               >
                 <img
                   src={
-                    user.profileImage ||
+                    user?.profileImage ||
                     "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
                   }
                   alt="User"
+                  className="rounded-full w-10 h-10 object-cover"
                 />
               </button>
               <div
@@ -236,8 +237,8 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                to="/toprated"
-                onClick={() => handleMenuClick("/toprated")}
+                to="/popular"
+                onClick={() => handleMenuClick("/popular")}
                 className="block text-white hover:text-red-500 transition"
               >
                 Popular
