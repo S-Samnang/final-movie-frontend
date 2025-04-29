@@ -5,7 +5,9 @@ import { request } from "../util/request";
 import Logo from "../assets/funwatch.png";
 import ConfirmAlert from "./ComfirmAlert";
 import FavoriteModal from "./FavoriteModal";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"; // Optional, requires @heroicons/react
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"; // Optional, requires
+// @heroicons/react
+import UserIcon from "../assets/userIcon.jpg";
 
 const Navbar = () => {
   const { user, funClear } = profileStore();
@@ -37,12 +39,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const delay = setTimeout(() => {
+      // Handle Search
       if (query.trim().length > 1) {
         request(`search?query=${encodeURIComponent(query.trim())}`, "get")
           .then((res) => {
             const allResults = res.results || [];
-
-            // Show message if all movies are inactive
             const activeMovies = allResults.filter(
               (movie) => movie.status === 1
             );
@@ -55,7 +56,7 @@ const Navbar = () => {
               setMessage("");
             }
 
-            setResults(activeMovies); // only show active movies
+            setResults(activeMovies);
             setShowDropdown(true);
           })
           .catch(() => {
@@ -67,6 +68,22 @@ const Navbar = () => {
         setShowDropdown(false);
         setMessage("");
       }
+
+      // Handle Click Outside for User Dropdown
+      const handleClickOutside = (event) => {
+        if (
+          userDropdownRef.current &&
+          !userDropdownRef.current.contains(event.target) &&
+          !event.target.closest("button")
+        ) {
+          userDropdownRef.current.classList.add("hidden");
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
     }, 300);
 
     return () => clearTimeout(delay);
@@ -163,10 +180,7 @@ const Navbar = () => {
                 className="w-8 h-8 rounded-full overflow-hidden border"
               >
                 <img
-                  src={
-                    user?.profileImage ||
-                    "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-                  }
+                  src={user?.profileImage || UserIcon}
                   alt="User"
                   className="rounded-full w-10 h-10 object-cover"
                 />

@@ -1,11 +1,5 @@
 import "./App.css";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Login/RegisterPage";
@@ -20,6 +14,8 @@ import SearchPage from "./pages/Category/SerachPage";
 import SocialLoginRedirect from "./component/SocialLoginRedirect";
 import RedirectToBackpack from "./component/RedirectToBackpack";
 import FavoriteModal from "./component/FavoriteModal";
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
 
 function App() {
   return (
@@ -48,6 +44,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/social-login" element={<SocialLoginRedirect />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />  
           </Route>
 
           {/* admin route */}
