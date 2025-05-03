@@ -16,6 +16,7 @@ import RedirectToBackpack from "./component/RedirectToBackpack";
 import FavoriteModal from "./component/FavoriteModal";
 import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
+import ActorDetail from "./pages/Detail/ActorDetail";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
             <Route path="/nowplaying" element={<NowPlayingPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/actor/:id" element={<ActorDetail />} />
+
             <Route
               path="/favorites"
               element={

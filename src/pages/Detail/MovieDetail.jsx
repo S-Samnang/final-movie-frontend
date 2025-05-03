@@ -4,6 +4,7 @@ import { request } from "../../util/request";
 import { Dialog } from "@headlessui/react";
 import { profileStore } from "../../store/profileStore";
 import DefaultProfile from "../../assets/default-avatar.jpg";
+import { Link } from "react-router-dom";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -137,21 +138,26 @@ const MovieDetail = () => {
                       key={actor.id}
                       className="flex-shrink-0 w-[90px] text-center transition-transform duration-300 hover:scale-105"
                     >
-                      <img
-                        src={
-                          actor.profile_path
-                            ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                            : DefaultProfile
-                        }
-                        alt={actor.name}
-                        className="rounded-lg mb-1 w-full h-[120px] object-cover shadow-md"
-                      />
-                      <p className="text-sm text-white truncate">
-                        {actor.name}
-                      </p>
-                      <p className="text-xs text-gray-400 truncate">
-                        {actor.character}
-                      </p>
+                      <Link
+                        to={`/actor/${actor.id}`}
+                        onClick={() => console.log("Clicked Actor:", actor)}
+                      >
+                        <img
+                          src={
+                            actor.profile_path
+                              ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                              : DefaultProfile
+                          }
+                          alt={actor.name}
+                          className="rounded-lg mb-1 w-full h-[120px] object-cover shadow-md"
+                        />
+                        <p className="text-sm text-white truncate">
+                          {actor.name}
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                          {actor.character}
+                        </p>
+                      </Link>
                     </div>
                   ))}
                 </div>
