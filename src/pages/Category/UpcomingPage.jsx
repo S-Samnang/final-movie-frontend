@@ -1,37 +1,46 @@
 import { useEffect, useState, useRef } from "react";
+import { movieStore } from "../../store/movieStore";
 import { request } from "../../util/request";
 import MovieCard from "../../component/MovieCard";
 import SkeletonCard from "../../component/SkeletonCard";
 
 const UpcomingPage = () => {
-  const [movies, setMovies] = useState([]);
+  const type = "upcoming";
+  const observerRef = useRef();
+
+  const {
+    getMoviesByType,
+    setMoviesByType,
+    appendMoviesByType,
+    getPagination,
+    setPagination,
+  } = movieStore();
+
+  const [movies, setMovies] = useState(getMoviesByType(type));
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    last_page: 1,
-  });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(movies.length === 0);
   const [loadingMore, setLoadingMore] = useState(false);
-
-  const observerRef = useRef();
+  const pagination = getPagination(type);
 
   const fetchMovies = (page = 1, append = false) => {
     if (page > pagination.last_page) return;
 
     page === 1 ? setLoading(true) : setLoadingMore(true);
 
-    request(`movies?type=upcoming&page=${page}`, "get")
+    request(`movies?type=${type}&page=${page}`, "get")
       .then((res) => {
         const data = res.movies?.data || [];
 
         if (append) {
+          appendMoviesByType(type, data);
           setMovies((prev) => [...prev, ...data]);
         } else {
+          setMoviesByType(type, data);
           setMovies(data);
         }
 
-        setPagination({
+        setPagination(type, {
           current_page: res.movies?.current_page,
           last_page: res.movies?.last_page,
         });
@@ -47,7 +56,7 @@ const UpcomingPage = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
+    if (movies.length === 0) fetchMovies();
     fetchGenres();
   }, []);
 
@@ -63,11 +72,10 @@ const UpcomingPage = () => {
 
     const target = document.querySelector("#loadMoreTrigger");
     if (target) observer.observe(target);
-
     observerRef.current = observer;
 
     return () => {
-      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current?.disconnect();
     };
   }, [pagination.current_page, loadingMore, loading]);
 
@@ -76,9 +84,9 @@ const UpcomingPage = () => {
     setSelectedGenre(genreName || null);
 
     if (!genreName) {
-      fetchMovies(); // refetch all movies if "All Genres"
+      setMovies(getMoviesByType(type)); // restore cached full list
     } else {
-      const filtered = movies.filter((movie) =>
+      const filtered = getMoviesByType(type).filter((movie) =>
         movie.genres?.some((g) => g.name === genreName)
       );
       setMovies(filtered);

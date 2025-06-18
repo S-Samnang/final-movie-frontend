@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { movieStore } from "../../store/movieStore";
 import SwiperBanner from "../../component/SwiperBanner";
 import SwiperMovieCard from "../../component/SwiperMovieCard";
 import SkeletonCard from "../../component/SkeletonCard";
@@ -6,41 +7,37 @@ import SkeletonBanner from "../../component/SkeletonBanner";
 import { request } from "../../util/request";
 
 const HomePage = () => {
-  const [popularMovie, setPopularMovie] = useState([]);
-  const [nowPlayMovie, setNowPlayMovie] = useState([]);
-  const [upcomingMovie, setUpcomingMovie] = useState([]);
+  const { getMoviesByType, setMoviesByType } = movieStore();
+
+  const [popularMovie, setPopularMovie] = useState(getMoviesByType("popular"));
+  const [nowPlayMovie, setNowPlayMovie] = useState(
+    getMoviesByType("now_playing")
+  );
+  const [upcomingMovie, setUpcomingMovie] = useState(
+    getMoviesByType("upcoming")
+  );
 
   useEffect(() => {
-    const fetchPopularMovie = async () => {
+    const fetchSection = async (type, setter) => {
+      const cached = getMoviesByType(type);
+      if (cached.length > 0) {
+        setter(cached);
+        return;
+      }
+
       try {
-        const response = await request("movies?type=popular", "get");
-        setPopularMovie(response.movies?.data || []);
+        const response = await request(`movies?type=${type}`, "get");
+        const data = response.movies?.data || [];
+        setMoviesByType(type, data);
+        setter(data);
       } catch (err) {
-        console.error("Error fetching top rated movies:", err);
+        console.error(`Error fetching ${type} movies:`, err);
       }
     };
 
-    const fetchNowPlayMovie = async () => {
-      try {
-        const response = await request("movies?type=now_playing", "get");
-        setNowPlayMovie(response.movies?.data || []);
-      } catch (err) {
-        console.error("Error fetching now playing movies:", err);
-      }
-    };
-
-    const fetchUpcomingMovie = async () => {
-      try {
-        const response = await request("movies?type=upcoming", "get");
-        setUpcomingMovie(response.movies?.data || []);
-      } catch (err) {
-        console.error("Error fetching upcoming movies:", err);
-      }
-    };
-
-    fetchPopularMovie();
-    fetchNowPlayMovie();
-    fetchUpcomingMovie();
+    fetchSection("popular", setPopularMovie);
+    fetchSection("now_playing", setNowPlayMovie);
+    fetchSection("upcoming", setUpcomingMovie);
   }, []);
 
   const renderSkeletons = () => (

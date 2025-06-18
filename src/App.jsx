@@ -17,8 +17,17 @@ import FavoriteModal from "./component/FavoriteModal";
 import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/Login/ResetPasswordPage";
 import ActorDetail from "./pages/Detail/ActorDetail";
+import { useEffect } from "react";
+import { movieStore } from "./store/movieStore";
 
 function App() {
+  useEffect(() => {
+    const isHardReload = performance.navigation.type === 1; // Type 1 = hard reload
+    if (isHardReload) {
+      movieStore.getState().clearCache(); // Clear Zustand movie cache
+    }
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -48,7 +57,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/social-login" element={<SocialLoginRedirect />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />  
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
           </Route>
 
           {/* admin route */}

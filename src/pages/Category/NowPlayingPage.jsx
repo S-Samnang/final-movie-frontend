@@ -1,36 +1,45 @@
 import { useEffect, useState, useRef } from "react";
+import { movieStore } from "../../store/movieStore";
 import { request } from "../../util/request";
 import MovieCard from "../../component/MovieCard";
 import SkeletonCard from "../../component/SkeletonCard";
 
 const NowPlayingPage = () => {
-  const [movies, setMovies] = useState([]);
+  const type = "now_playing";
+  const observerRef = useRef();
+
+  const {
+    getMoviesByType,
+    setMoviesByType,
+    appendMoviesByType,
+    getPagination,
+    setPagination,
+  } = movieStore();
+
+  const [movies, setMovies] = useState(getMoviesByType(type));
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    last_page: 1,
-  });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(movies.length === 0);
   const [loadingMore, setLoadingMore] = useState(false);
-
-  const observerRef = useRef();
+  const pagination = getPagination(type);
 
   const fetchMovies = (page = 1, append = false) => {
     if (page > pagination.last_page) return;
 
     page === 1 ? setLoading(true) : setLoadingMore(true);
 
-    request(`movies?type=now_playing&page=${page}`, "get")
+    request(`movies?type=${type}&page=${page}`, "get")
       .then((res) => {
         const data = res.movies?.data || [];
         if (append) {
+          appendMoviesByType(type, data);
           setMovies((prev) => [...prev, ...data]);
         } else {
+          setMoviesByType(type, data);
           setMovies(data);
         }
 
-        setPagination({
+        setPagination(type, {
           current_page: res.movies?.current_page,
           last_page: res.movies?.last_page,
         });
@@ -46,7 +55,9 @@ const NowPlayingPage = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
+    if (movies.length === 0) {
+      fetchMovies();
+    }
     fetchGenres();
   }, []);
 
@@ -75,9 +86,9 @@ const NowPlayingPage = () => {
     setSelectedGenre(genreName || null);
 
     if (!genreName) {
-      fetchMovies(); // refetch all movies if "All Genres"
+      setMovies(getMoviesByType(type));
     } else {
-      const filtered = movies.filter((movie) =>
+      const filtered = getMoviesByType(type).filter((movie) =>
         movie.genres?.some((g) => g.name === genreName)
       );
       setMovies(filtered);
@@ -90,7 +101,6 @@ const NowPlayingPage = () => {
         Now Playing Movies
       </h2>
 
-      {/* Genre Filter */}
       <div className="flex justify-center mb-8">
         <select
           onChange={handleGenreChange}
@@ -106,7 +116,6 @@ const NowPlayingPage = () => {
         </select>
       </div>
 
-      {/* Movie Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {loading && movies.length === 0 ? (
           Array.from({ length: 8 }).map((_, idx) => <SkeletonCard key={idx} />)
@@ -119,7 +128,6 @@ const NowPlayingPage = () => {
         )}
       </div>
 
-      {/* Loading More Animation */}
       {loadingMore && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-10">
           {Array.from({ length: 4 }).map((_, idx) => (
@@ -128,7 +136,6 @@ const NowPlayingPage = () => {
         </div>
       )}
 
-      {/* Trigger for Infinite Scroll */}
       <div id="loadMoreTrigger" className="h-10 mt-10"></div>
     </div>
   );
